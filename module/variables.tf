@@ -1,5 +1,5 @@
-variable "cluster_prefix" {
-    default = ""
+variable "cluster_name" {
+    default = "red5pro"
 }
 
 variable "ssh_key" {

@@ -1,27 +1,16 @@
 resource "aws_iam_user" "streammanager" {
-  name = "streammanager"
+  name = "${var.cluster_name}-streammanager"
 }
 
 resource "aws_iam_access_key" "streammanager" {
   user = "${aws_iam_user.streammanager.name}"
 }
 
-resource "aws_iam_user_policy" "lb_ro" {
-  name = "test"
-  user = "${aws_iam_user.streammanager.name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ec2:Describe*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
+data "aws_iam_policy" "streammanager" {
+  arn = "arn:aws:iam::aws:policy/EC2FullAccess"
 }
-EOF
+
+resource "aws_iam_user_policy_attachment" "streammanager" {
+  user       = "${aws_iam_user.streammanager.name}"
+  policy_arn = "${data.aws_iam_policy.streammanager.arn}"
 }
